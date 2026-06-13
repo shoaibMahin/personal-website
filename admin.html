@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Shoaib Mahin Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Admin specific layout styles */
+        body {
+            padding-top: 90px;
+            background-color: #f8fafc;
+        }
+        
+        .admin-container {
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            padding: 0 1.5rem;
+        }
+
+        .auth-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 3rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
+            max-width: 420px;
+            margin: 4rem auto;
+        }
+
+        .auth-card h2 {
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-card p {
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Dashboard Tabs */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1.25rem;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05);
+        }
+
+        .panel {
+            display: none;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 0.75rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.5fr;
+            gap: 1.5rem;
+        }
+
+        /* Skills manager styles */
+        .skills-manager-list {
+            margin-top: 2rem;
+        }
+
+        .skill-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .skill-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .skill-item-row span.skill-cat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 12px;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fee2e2;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete:hover {
+            background: #fee2e2;
+        }
+
+        /* Projects manager styles */
+        .project-editor-card {
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #f8fafc;
+        }
+
+        .project-editor-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-editor-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .form-grid-3 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Admin Header -->
+    <header class="site-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                Shoaib<span>Mahin</span> <span style="font-size: 0.85rem; font-weight:500; color:#64748b; margin-left: 8px;">Dashboard</span>
+            </a>
+            <button id="logoutBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; display: none;">Log Out</button>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- Auth Section -->
+        <div id="authSection" class="auth-card">
+            <h2>Admin Login</h2>
+            <p>Enter email and password to manage portfolio data.</p>
+            <div id="loginMessage" class="form-message"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required placeholder="admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+            </form>
+        </div>
+
+        <!-- Dashboard Section (Hidden by default) -->
+        <div id="dashboardSection" style="display: none;">
+            <div class="admin-header">
+                <div>
+                    <h2>Welcome Back, Shoaib!</h2>
+                    <p style="color: #64748b; font-size: 0.95rem;">You can update all information appearing on the portfolio homepage here.</p>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-target="profilePanel">Profile Details</button>
+                <button class="tab-btn" data-target="skillsPanel">Skills Manager</button>
+                <button class="tab-btn" data-target="projectsPanel">Projects Manager</button>
+            </div>
+
+            <!-- Profile Editor Panel -->
+            <div id="profilePanel" class="panel active">
+                <h3 class="panel-title">Edit Profile Information</h3>
+                <div id="profileMessage" class="form-message"></div>
+                <form id="profileForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prof_name">Full Name</label>
+                            <input type="text" id="prof_name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof_title">Professional Title</label>
+                            <input type="text" id="prof_title" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prof_tag">Hero Tagline</label>
+                            <input type="text" id="prof_tag" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof_email">Contact Email</label>
+                            <input type="email" id="prof_email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="prof_hero_desc">Hero Description</label>
+                            <textarea id="prof_hero_desc" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="prof_about_1">About Me (Paragraph 1)</label>
+                            <textarea id="prof_about_1" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="prof_about_2">About Me (Paragraph 2)</label>
+                            <textarea id="prof_about_2" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                    <h4 style="margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f1f5f9;">Education Details</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prof_edu_year">Duration/Year (e.g. 2023 - Present)</label>
+                            <input type="text" id="prof_edu_year" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof_edu_degree">Degree (e.g. B.Sc. in CSE)</label>
+                            <input type="text" id="prof_edu_degree" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prof_edu_inst">Department / Institution</label>
+                            <input type="text" id="prof_edu_inst" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof_location">Location (City, Country)</label>
+                            <input type="text" id="prof_location" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="prof_edu_desc">Education Description</label>
+                            <textarea id="prof_edu_desc" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save Profile Changes</button>
+                </form>
+            </div>
+
+            <!-- Skills Panel -->
+            <div id="skillsPanel" class="panel">
+                <h3 class="panel-title">Manage Skills</h3>
+                <div id="skillsMessage" class="form-message"></div>
+                <form id="addSkillForm" style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9;">
+                    <h4>Add New Skill</h4>
+                    <div class="form-grid-3" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="skill_cat">Category</label>
+                            <select id="skill_cat" class="form-control" required>
+                                <option value="Languages">Languages</option>
+                                <option value="Web Technologies">Web Technologies</option>
+                                <option value="Tools & Platforms">Tools & Platforms</option>
+                                <option value="Soft Skills">Soft Skills</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="skill_name">Skill Name (e.g. Node.js)</label>
+                            <input type="text" id="skill_name" class="form-control" required placeholder="Enter skill">
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Add Skill</button>
+                        </div>
+                    </div>
+                </form>
+
+                <h4>Current Skills</h4>
+                <div class="skills-manager-list" id="skillsManagerList">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Projects Panel -->
+            <div id="projectsPanel" class="panel">
+                <h3 class="panel-title">Manage Projects</h3>
+                <div id="projectsMessage" class="form-message"></div>
+                
+                <!-- Project form (used for add and edit) -->
+                <form id="projectForm" style="margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid #f1f5f9;">
+                    <h4 id="projectFormTitle">Add New Project</h4>
+                    <input type="hidden" id="proj_id">
+                    
+                    <div class="form-row" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="proj_title">Project Title</label>
+                            <input type="text" id="proj_title" class="form-control" required placeholder="Student database">
+                        </div>
+                        <div class="form-group">
+                            <label for="proj_type">Project Type (e.g. Web App, Python CLI)</label>
+                            <input type="text" id="proj_type" class="form-control" required placeholder="Web Application">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="proj_tags">Tags (Comma-separated, e.g. React, Node, SQL)</label>
+                            <input type="text" id="proj_tags" class="form-control" required placeholder="PHP, MySQL, HTML">
+                        </div>
+                        <div class="form-group">
+                            <label for="proj_github">GitHub URL</label>
+                            <input type="url" id="proj_github" class="form-control" required placeholder="https://github.com/...">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="proj_desc">Description</label>
+                            <textarea id="proj_desc" class="form-control" required placeholder="Enter brief project details"></textarea>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" id="projSubmitBtn" class="btn btn-primary">Add Project</button>
+                        <button type="button" id="projCancelBtn" class="btn btn-secondary" style="display: none;">Cancel Edit</button>
+                    </div>
+                </form>
+
+                <h4>Current Projects</h4>
+                <div style="margin-top: 1.5rem;" id="projectsManagerList">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Supabase CDN Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>
