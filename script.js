@@ -5,7 +5,7 @@
 // SUPABASE CONFIGURATION
 // Replace YOUR_SUPABASE_URL and YOUR_SUPABASE_ANON_KEY with your credentials
 // =========================================================================
-const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseUrl = 'https://fdtvqmhnaxdhjzmflkwi.supabase.co';
 const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
 
 let supabaseClient = null;
