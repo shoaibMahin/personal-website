@@ -471,6 +471,12 @@ function setupAdminForms() {
         profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const msg = document.getElementById('profileMessage');
+            const submitBtn = document.getElementById('profileSubmitBtn');
+            const originalText = submitBtn.textContent;
+            
+            // Set loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
             msg.style.display = 'none';
 
             const profileData = {
@@ -497,11 +503,27 @@ function setupAdminForms() {
                 msg.className = 'form-message error';
                 msg.textContent = error.message;
                 msg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             } else {
                 msg.className = 'form-message success';
                 msg.textContent = 'Profile successfully updated!';
                 msg.style.display = 'block';
-                setTimeout(() => msg.style.display = 'none', 3000);
+                
+                // Visual feedback: green button & text change
+                submitBtn.style.backgroundColor = '#22c55e'; // Tailwind green-500
+                submitBtn.style.borderColor = '#22c55e';
+                submitBtn.style.color = '#ffffff';
+                submitBtn.textContent = 'Saved Successfully!';
+                
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.style.backgroundColor = '';
+                    submitBtn.style.borderColor = '';
+                    submitBtn.style.color = '';
+                    submitBtn.textContent = originalText;
+                }, 3000);
             }
         });
     }
