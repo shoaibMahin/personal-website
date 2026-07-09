@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Shoaib Mahin - CSE Student & Developer Portfolio Website. Discover my projects, skills, and get in touch.">
     <title>Shoaib Mahin | CSE Student & Developer</title>
+    <script>
+        window.addEventListener('error', function(e) {
+            alert('JavaScript Error:\n' + e.message + '\n\nFile: ' + e.filename + '\nLine: ' + e.lineno);
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            alert('Promise Rejection:\n' + e.reason);
+        });
+    </script>
     <link rel="stylesheet" href="style.css">
     <!-- Supabase CDN Script -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

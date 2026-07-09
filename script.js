@@ -177,6 +177,10 @@ async function loadViewerData() {
             .eq('id', 1)
             .single();
 
+        if (pError) {
+            alert("Supabase Profile Load Error:\n" + pError.message);
+        }
+
         if (profile && !pError) {
             document.title = `${profile.name} | CSE Student & Developer`;
             document.querySelector('.logo').innerHTML = `${profile.name.split(' ')[0]}<span>${profile.name.split(' ').slice(1).join(' ')}</span>`;
@@ -225,6 +229,9 @@ async function loadViewerData() {
             .from('skills')
             .select('*');
 
+        if (sError) {
+            alert("Supabase Skills Load Error:\n" + sError.message);
+        }
         if (skills && !sError) {
             renderViewerSkills(skills);
         }
@@ -235,12 +242,16 @@ async function loadViewerData() {
             .select('*')
             .order('id', { ascending: true });
 
+        if (prError) {
+            alert("Supabase Projects Load Error:\n" + prError.message);
+        }
         if (projects && !prError) {
             renderViewerProjects(projects);
         }
 
     } catch (error) {
         console.error("Error loading Supabase data:", error);
+        alert("Client Database Render Crash:\n" + error.message);
     }
 }
 
