@@ -183,7 +183,10 @@ async function loadViewerData() {
 
         if (profile && !pError) {
             document.title = `${profile.name} | CSE Student & Developer`;
-            document.querySelector('.logo').innerHTML = `${profile.name.split(' ')[0]}<span>${profile.name.split(' ').slice(1).join(' ')}</span>`;
+            const logoEl = document.querySelector('.logo');
+            if (logoEl) {
+                logoEl.innerHTML = `${profile.name.split(' ')[0]}<span>${profile.name.split(' ').slice(1).join(' ')}</span>`;
+            }
             
             // Hero section
             const heroBadge = document.querySelector('#home .hero-badge');
