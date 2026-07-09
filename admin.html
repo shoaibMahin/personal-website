@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Shoaib Mahin Portfolio</title>
+    <script>
+        window.addEventListener('error', function(e) {
+            alert('JavaScript Error:\n' + e.message + '\n\nFile: ' + e.filename + '\nLine: ' + e.lineno);
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            alert('Promise Rejection:\n' + e.reason);
+        });
+    </script>
     <link rel="stylesheet" href="style.css">
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
