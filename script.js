@@ -396,7 +396,7 @@ function initAdminDashboard() {
             loadAdminData();
         } else {
             // Logged out
-            authSection.style.display = 'block';
+            authSection.style.display = 'flex';
             dashboardSection.style.display = 'none';
             logoutBtn.style.display = 'none';
         }
@@ -446,13 +446,13 @@ function initAdminDashboard() {
         forgotPasswordLink.addEventListener('click', (e) => {
             e.preventDefault();
             authSection.style.display = 'none';
-            resetEmailSection.style.display = 'block';
+            resetEmailSection.style.display = 'flex';
         });
 
         backToLoginLink.addEventListener('click', (e) => {
             e.preventDefault();
             resetEmailSection.style.display = 'none';
-            authSection.style.display = 'block';
+            authSection.style.display = 'flex';
         });
     }
 
