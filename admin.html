@@ -1,275 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Shoaib Mahin Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Admin specific layout styles */
-        body {
-            padding-top: 90px;
-            background-color: #f8fafc;
-        }
-        
-        .admin-container {
-            max-width: 900px;
-            margin: 0 auto 4rem;
-            padding: 0 1.5rem;
-        }
-
-        .auth-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            padding: 3rem 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
-            max-width: 420px;
-            margin: 4rem auto;
-        }
-
-        .auth-card h2 {
-            margin-bottom: 0.5rem;
-            font-size: 1.75rem;
-            letter-spacing: -0.5px;
-        }
-
-        .auth-card p {
-            color: #64748b;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-
-        /* Dashboard Tabs */
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 1.25rem;
-        }
-
-        .admin-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            background: #f1f5f9;
-            padding: 4px;
-            border-radius: 8px;
-            width: fit-content;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 0.5rem 1.25rem;
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #64748b;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn.active {
-            background: #ffffff;
-            color: #0f172a;
-            box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05);
-        }
-
-        .panel {
-            display: none;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .panel.active {
-            display: block;
-        }
-
-        .panel-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 0.75rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .form-grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1.5fr;
-            gap: 1.5rem;
-        }
-
-        /* Skills manager styles */
-        .skills-manager-list {
-            margin-top: 2rem;
-        }
-
-        .skill-item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .skill-item-row:last-child {
-            border-bottom: none;
-        }
-
-        .skill-item-row span.skill-cat-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            background: #eff6ff;
-            color: #2563eb;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-right: 12px;
-        }
-
-        .btn-delete {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fee2e2;
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-delete:hover {
-            background: #fee2e2;
-        }
-
-        /* Projects manager styles */
-        .project-editor-card {
-            border: 1px solid #e2e8f0;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            background: #f8fafc;
-        }
-
-        .project-editor-card h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-editor-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            .form-row, .form-grid-3 {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-    </style>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    
-    <!-- Admin Header -->
-    <header class="site-header">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">
-                Shoaib<span>Mahin</span> <span style="font-size: 0.85rem; font-weight:500; color:#64748b; margin-left: 8px;">Dashboard</span>
-            </a>
-            <button id="logoutBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; display: none;">Log Out</button>
-        </div>
-    </header>
 
-    <div class="admin-container">
-        <!-- Auth Section -->
-        <div id="authSection" class="auth-card">
-            <h2>Admin Login</h2>
-            <p>Enter email and password to manage portfolio data.</p>
-            <div id="loginMessage" class="form-message"></div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" required placeholder="admin@example.com">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
-                <div style="margin-top: 1.25rem; text-align: center;">
-                    <a href="#" id="forgotPasswordLink" style="font-size: 0.85rem; color: var(--accent-color); font-weight: 600;">Forgot Password?</a>
-                </div>
-            </form>
+    <div class="container">
+        <!-- Auth Section (Login Panel) -->
+        <div id="authSection" class="auth-wrapper">
+            <div class="auth-card">
+                <h2 class="auth-title">Admin Sign In</h2>
+                <p class="auth-subtitle">Welcome back! Sign in to manage your portfolio content.</p>
+                
+                <div id="authMessage" class="form-message"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required placeholder="name@example.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                            <label for="password" style="margin: 0;">Password</label>
+                            <a href="#" id="forgotPasswordLink" style="font-size: 0.8rem; color: var(--color-accent); font-weight: 600;">Forgot password?</a>
+                        </div>
+                        <input type="password" id="password" class="form-control" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Sign In</button>
+                </form>
+            </div>
         </div>
 
-        <!-- Reset Password Email Section -->
-        <div id="resetEmailSection" class="auth-card" style="display: none; margin-top: 4rem;">
-            <h2>Reset Password</h2>
-            <p>Enter your email to receive a password reset link.</p>
-            <div id="resetEmailMessage" class="form-message"></div>
-            <form id="resetEmailForm">
-                <div class="form-group">
-                    <label for="reset_email">Email</label>
-                    <input type="email" id="reset_email" class="form-control" required placeholder="admin@example.com">
-                </div>
-                <button type="submit" id="resetEmailSubmitBtn" class="btn btn-primary" style="width: 100%;">Send Reset Link</button>
-                <div style="margin-top: 1.25rem; text-align: center;">
-                    <a href="#" id="backToLoginLink" style="font-size: 0.85rem; color: #64748b; font-weight: 600;">Back to Login</a>
-                </div>
-            </form>
+        <!-- Password Reset Request Section (Hidden by Default) -->
+        <div id="resetEmailSection" class="auth-wrapper" style="display: none;">
+            <div class="auth-card">
+                <h2 class="auth-title">Reset Password</h2>
+                <p class="auth-subtitle">Enter your registered email below to receive a secure recovery link.</p>
+                
+                <div id="resetEmailMessage" class="form-message"></div>
+                
+                <form id="resetEmailForm">
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label for="reset_email">Email Address</label>
+                        <input type="email" id="reset_email" class="form-control" required placeholder="shoaib@example.com">
+                    </div>
+                    <button type="submit" id="resetEmailSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 1rem;">Send Reset Link</button>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <a href="#" id="backToLoginLink" style="font-size: 0.85rem; color: var(--color-text-secondary); font-weight: 600;">Back to Login</a>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <!-- Dashboard Section (Hidden by default) -->
-        <div id="dashboardSection" style="display: none;">
+        <!-- Dashboard Section (Hidden by default, shown after sign-in) -->
+        <div id="dashboardSection" class="dashboard-container" style="display: none;">
             <div class="admin-header">
                 <div>
-                    <h2>Welcome Back, Shoaib!</h2>
-                    <p style="color: #64748b; font-size: 0.95rem;">You can update all information appearing on the portfolio homepage here.</p>
+                    <h2>Control Panel</h2>
+                    <p style="color: var(--color-text-secondary); font-size: 0.95rem;">Update your profile details, manage skills list, and edit project highlights.</p>
                 </div>
+                <button id="logoutBtn" class="btn btn-secondary" style="padding: 0.65rem 1.25rem; font-size: 0.9rem;">
+                    <i data-lucide="log-out" style="width: 16px; height: 16px; margin-right: 6px;"></i> Log Out
+                </button>
             </div>
 
-            <!-- Tab Buttons -->
+            <!-- Tab Segmented Control -->
             <div class="admin-tabs">
                 <button class="tab-btn active" data-target="profilePanel">Profile Details</button>
                 <button class="tab-btn" data-target="skillsPanel">Skills Manager</button>
                 <button class="tab-btn" data-target="projectsPanel">Projects Manager</button>
             </div>
 
-            <!-- Profile Editor Panel -->
+            <!-- Panel 1: Profile Editor -->
             <div id="profilePanel" class="panel active">
                 <h3 class="panel-title">Edit Profile Information</h3>
                 <div id="profileMessage" class="form-message"></div>
+                
                 <form id="profileForm">
-                    <div class="form-row" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem;">
-                        <div>
-                            <img id="prof_avatar_preview" src="images/avatar.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; display: block;">
-                        </div>
-                        <div class="form-group" style="margin: 0; flex-grow: 1;">
-                            <label for="prof_avatar_file">Change Profile Picture</label>
-                            <input type="file" id="prof_avatar_file" accept="image/*" class="form-control" style="padding: 6px 12px;">
+                    <!-- Profile Avatar Uploader -->
+                    <div style="background-color: var(--color-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                        <img id="prof_avatar_preview" src="images/avatar.png" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-accent);">
+                        <div style="flex-grow: 1;">
+                            <label for="prof_avatar_file" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-text-primary);">Change Profile Photo</label>
+                            <input type="file" id="prof_avatar_file" accept="image/*" class="form-control" style="padding: 6px 12px; font-size: 0.85rem;">
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="prof_name">Full Name</label>
@@ -280,6 +101,7 @@
                             <input type="text" id="prof_title" class="form-control" required>
                         </div>
                     </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="prof_tag">Hero Tagline</label>
@@ -290,64 +112,66 @@
                             <input type="email" id="prof_email" class="form-control" required>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label for="prof_hero_desc">Hero Description</label>
-                            <textarea id="prof_hero_desc" class="form-control" required></textarea>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="prof_hero_desc">Hero Description</label>
+                        <textarea id="prof_hero_desc" class="form-control" required></textarea>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label for="prof_about_1">About Me (Paragraph 1)</label>
-                            <textarea id="prof_about_1" class="form-control" required></textarea>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label for="prof_about_2">About Me (Paragraph 2)</label>
-                            <textarea id="prof_about_2" class="form-control" required></textarea>
-                        </div>
-                    </div>
-                    <h4 style="margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f1f5f9;">Education Details</h4>
+
+                    <h4 style="margin: 2.5rem 0 1rem; font-size: 1.2rem; color: var(--color-text-primary); border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem;">About & Education Details</h4>
+                    
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="prof_edu_year">Duration/Year (e.g. 2023 - Present)</label>
+                            <label for="prof_about_1">About Intro Paragraph</label>
+                            <textarea id="prof_about_1" class="form-control" required style="min-height: 100px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof_about_2">About Details Paragraph</label>
+                            <textarea id="prof_about_2" class="form-control" required style="min-height: 100px;"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prof_edu_degree">Degree (e.g. B.Sc in CSE)</label>
+                            <input type="text" id="prof_edu_degree" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prof_edu_inst">Institution (e.g. Dept of CSE)</label>
+                            <input type="text" id="prof_edu_inst" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prof_edu_year">Academic Session (e.g. 2023 - Present)</label>
                             <input type="text" id="prof_edu_year" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label for="prof_edu_degree">Degree (e.g. B.Sc. in CSE)</label>
-                            <input type="text" id="prof_edu_degree" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="prof_edu_inst">Department / Institution</label>
-                            <input type="text" id="prof_edu_inst" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="prof_location">Location (City, Country)</label>
+                            <label for="prof_location">Location Status (e.g. Dhaka, Bangladesh)</label>
                             <input type="text" id="prof_location" class="form-control" required>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label for="prof_edu_desc">Education Description</label>
-                            <textarea id="prof_edu_desc" class="form-control" required></textarea>
-                        </div>
+
+                    <div class="form-group" style="margin-bottom: 2.5rem;">
+                        <label for="prof_edu_desc">Education Details Summary</label>
+                        <textarea id="prof_edu_desc" class="form-control" required></textarea>
                     </div>
-                    <button type="submit" id="profileSubmitBtn" class="btn btn-primary" style="margin-top: 1rem;">Save Profile Changes</button>
+
+                    <button type="submit" id="profileSubmitBtn" class="btn btn-primary" style="padding: 1rem 2rem;">Save Changes</button>
                 </form>
             </div>
 
-            <!-- Skills Panel -->
+            <!-- Panel 2: Skills Management -->
             <div id="skillsPanel" class="panel">
-                <h3 class="panel-title">Manage Skills</h3>
+                <h3 class="panel-title">Manage Expertise & Stacks</h3>
                 <div id="skillsMessage" class="form-message"></div>
-                <form id="addSkillForm" style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9;">
-                    <h4>Add New Skill</h4>
-                    <div class="form-grid-3" style="margin-top: 1rem;">
-                        <div class="form-group">
-                            <label for="skill_cat">Category</label>
+
+                <form id="addSkillForm" style="background-color: var(--color-bg); border: 1px solid var(--color-border); padding: 2rem; border-radius: 16px; margin-bottom: 3rem;">
+                    <h4 style="margin-bottom: 1.25rem; font-size: 1.1rem; color: var(--color-text-primary);">Add New Skill</h4>
+                    <div class="form-row" style="margin: 0; align-items: flex-end;">
+                        <div class="form-group" style="margin: 0;">
+                            <label for="skill_cat">Skill Category</label>
                             <select id="skill_cat" class="form-control" required>
                                 <option value="Languages">Languages</option>
                                 <option value="Web Technologies">Web Technologies</option>
@@ -355,83 +179,84 @@
                                 <option value="Soft Skills">Soft Skills</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="skill_name">Skill Name (e.g. Node.js)</label>
-                            <input type="text" id="skill_name" class="form-control" required placeholder="Enter skill">
+                        <div class="form-group" style="margin: 0;">
+                            <label for="skill_name">Skill Name</label>
+                            <input type="text" id="skill_name" class="form-control" required placeholder="e.g. React.js, C++">
                         </div>
-                        <div class="form-group" style="display: flex; align-items: flex-end;">
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">Add Skill</button>
+                        <div class="form-group" style="margin: 0;">
+                            <button type="submit" class="btn btn-primary" style="height: 48px; width: 100%;">Add Stack</button>
                         </div>
                     </div>
                 </form>
 
-                <h4>Current Skills</h4>
+                <h4 style="margin-bottom: 1rem; color: var(--color-text-primary);">Current Skills List</h4>
                 <div class="skills-manager-list" id="skillsManagerList">
-                    <!-- Loaded dynamically via JS -->
+                    <!-- Dynamically populated -->
                 </div>
             </div>
 
-            <!-- Projects Panel -->
+            <!-- Panel 3: Projects Management -->
             <div id="projectsPanel" class="panel">
                 <h3 class="panel-title">Manage Projects</h3>
                 <div id="projectsMessage" class="form-message"></div>
-                
-                <!-- Project form (used for add and edit) -->
-                <form id="projectForm" style="margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid #f1f5f9;">
-                    <h4 id="projectFormTitle">Add New Project</h4>
+
+                <form id="projectForm" style="background-color: var(--color-bg); border: 1px solid var(--color-border); padding: 2rem; border-radius: 16px; margin-bottom: 3rem;">
+                    <h4 id="projectFormTitle" style="margin-bottom: 1.5rem; font-size: 1.2rem; color: var(--color-text-primary);">Add New Project</h4>
                     <input type="hidden" id="proj_id">
-                    
-                    <div class="form-row" style="margin-top: 1rem;">
-                        <div class="form-group">
-                            <label for="proj_title">Project Title</label>
-                            <input type="text" id="proj_title" class="form-control" required placeholder="Student database">
-                        </div>
-                        <div class="form-group">
-                            <label for="proj_type">Project Type (e.g. Web App, Python CLI)</label>
-                            <input type="text" id="proj_type" class="form-control" required placeholder="Web Application">
-                        </div>
-                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="proj_tags">Tags (Comma-separated, e.g. React, Node, SQL)</label>
-                            <input type="text" id="proj_tags" class="form-control" required placeholder="PHP, MySQL, HTML">
+                            <label for="proj_title">Project Title</label>
+                            <input type="text" id="proj_title" class="form-control" required placeholder="e.g. Student Portal">
                         </div>
                         <div class="form-group">
-                            <label for="proj_github">GitHub URL</label>
+                            <label for="proj_type">Project Type / Subtitle</label>
+                            <input type="text" id="proj_type" class="form-control" required placeholder="e.g. PHP Web App">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="proj_tags">Tags (Comma-separated)</label>
+                            <input type="text" id="proj_tags" class="form-control" required placeholder="e.g. HTML, PHP, SQL">
+                        </div>
+                        <div class="form-group">
+                            <label for="proj_github">GitHub Repository Link</label>
                             <input type="url" id="proj_github" class="form-control" required placeholder="https://github.com/...">
                         </div>
                     </div>
-                    <div class="form-row" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 2rem;">
+
+                    <!-- Project Art Selector -->
+                    <div style="background-color: var(--color-bg-card); border: 1px dashed var(--color-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1.5rem;">
                         <div id="proj_img_preview_container" style="display: none;">
-                            <img id="proj_img_preview" src="" style="width: 120px; height: 75px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0;">
+                            <img id="proj_img_preview" src="" style="width: 100px; height: 62px; border-radius: 8px; object-fit: cover; border: 1px solid var(--color-border);">
                         </div>
-                        <div class="form-group" style="margin: 0; flex-grow: 1;">
-                            <label for="proj_image_file">Upload Project Art / Screenshot (Optional)</label>
-                            <input type="file" id="proj_image_file" accept="image/*" class="form-control" style="padding: 6px 12px;">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label for="proj_desc">Description</label>
-                            <textarea id="proj_desc" class="form-control" required placeholder="Enter brief project details"></textarea>
+                        <div style="flex-grow: 1;">
+                            <label for="proj_image_file" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--color-text-primary);">Upload Project Art / Mockup (Optional)</label>
+                            <input type="file" id="proj_image_file" accept="image/*" class="form-control" style="padding: 6px 12px; font-size: 0.85rem;">
                         </div>
                     </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label for="proj_desc">Brief Project Description</label>
+                        <textarea id="proj_desc" class="form-control" required placeholder="Enter description details..."></textarea>
+                    </div>
+
                     <div style="display: flex; gap: 1rem;">
-                        <button type="submit" id="projSubmitBtn" class="btn btn-primary">Add Project</button>
-                        <button type="button" id="projCancelBtn" class="btn btn-secondary" style="display: none;">Cancel Edit</button>
+                        <button type="submit" id="projSubmitBtn" class="btn btn-primary" style="padding: 0.75rem 2rem;">Add Project</button>
+                        <button type="button" id="projCancelBtn" class="btn btn-secondary" style="display: none; padding: 0.75rem 2rem;">Cancel Edit</button>
                     </div>
                 </form>
 
-                <h4>Current Projects</h4>
-                <div style="margin-top: 1.5rem;" id="projectsManagerList">
-                    <!-- Loaded dynamically via JS -->
+                <h4 style="margin-bottom: 1rem; color: var(--color-text-primary);">Current Projects</h4>
+                <div id="projectsManagerList" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Dynamically populated -->
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- Supabase CDN Script -->
+    <!-- Supabase Client CDN Script -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
