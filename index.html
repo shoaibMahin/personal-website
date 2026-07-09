@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,39 +8,44 @@
     <link rel="stylesheet" href="style.css">
     <!-- Supabase CDN Script -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="site-header">
-        <div class="container nav-container">
-            <a href="#home" class="logo">
-                Shoaib<span>Mahin</span>
-            </a>
-            
-            <button class="nav-toggle" aria-label="Toggle Navigation" id="navToggle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            
-            <nav class="main-nav" id="mainNav">
-                <ul>
-                    <li><a href="#home" class="active">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Home Section -->
-    <section id="home">
+    <!-- Floating Navigation (Bottom Capsule Menu) -->
+    <nav class="floating-nav">
+        <div class="nav-pill">
+            <a href="#home" class="nav-link active" data-tooltip="Home" aria-label="Home">
+                <i data-lucide="home"></i>
+            </a>
+            <a href="#about" class="nav-link" data-tooltip="About" aria-label="About">
+                <i data-lucide="user"></i>
+            </a>
+            <a href="#projects" class="nav-link" data-tooltip="Works" aria-label="Works">
+                <i data-lucide="layout-dashboard"></i>
+            </a>
+            <a href="#contact" class="nav-link" data-tooltip="Contact" aria-label="Contact">
+                <i data-lucide="mail"></i>
+            </a>
+            <div class="nav-divider" role="separator"></div>
+            <a href="https://github.com" id="githubLink" target="_blank" rel="noopener noreferrer" class="nav-link" data-tooltip="GitHub" aria-label="GitHub">
+                <i data-lucide="github"></i>
+            </a>
+            <button class="nav-link theme-toggle" id="themeToggleBtn" data-tooltip="Toggle Theme" aria-label="Toggle Theme">
+                <i data-lucide="sun" class="sun-icon"></i>
+                <i data-lucide="moon" class="moon-icon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
         <div class="container">
             <div class="hero-wrapper">
-                <span class="hero-tag">Welcome to my space</span>
+                <div class="hero-badge">
+                    <span class="status-dot"></span> Available for new projects
+                </div>
                 <h1 class="hero-title">
                     Hi, I'm Shoaib Mahin.<br>
                     Computer Science & Engineering Student.
@@ -49,7 +54,18 @@
                     I build clean, efficient, and user-centric web applications and software. 
                     Passionate about learning new technologies and solving complex computational problems.
                 </p>
-                <div class="hero-ctas">
+                <div class="hero-stickers">
+                    <div class="sticker blue">
+                        <i data-lucide="code"></i> Frontend Dev
+                    </div>
+                    <div class="sticker">
+                        <i data-lucide="pen-tool"></i> UI/UX Design
+                    </div>
+                    <div class="sticker">
+                        <i data-lucide="database"></i> Backend & SQL
+                    </div>
+                </div>
+                <div class="hero-ctas" style="display: flex; gap: 1.25rem;">
                     <a href="#projects" class="btn btn-primary">View My Projects</a>
                     <a href="#contact" class="btn btn-secondary">Get In Touch</a>
                 </div>
@@ -57,17 +73,41 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about">
+    <!-- Skills Ticker Banner (Infinite Loop) -->
+    <div class="ticker-section">
+        <div class="ticker-wrapper">
+            <div class="ticker-content" id="skillsMarquee">
+                <!-- Fallback content, loaded dynamically via JS from Supabase -->
+                <div class="ticker-item"><i data-lucide="code"></i> Coding</div>
+                <div class="ticker-item"><i data-lucide="pen-tool"></i> UI/UX</div>
+                <div class="ticker-item"><i data-lucide="database"></i> Databases</div>
+                <div class="ticker-item"><i data-lucide="layers"></i> Systems</div>
+                <div class="ticker-item"><i data-lucide="laptop"></i> Web Apps</div>
+                <!-- Duplicate for infinite scroll loop -->
+                <div class="ticker-item"><i data-lucide="code"></i> Coding</div>
+                <div class="ticker-item"><i data-lucide="pen-tool"></i> UI/UX</div>
+                <div class="ticker-item"><i data-lucide="database"></i> Databases</div>
+                <div class="ticker-item"><i data-lucide="layers"></i> Systems</div>
+                <div class="ticker-item"><i data-lucide="laptop"></i> Web Apps</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About & Skills Bento Section -->
+    <section class="about" id="about">
         <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <p class="section-subtitle">A brief overview of my academic background, technical expertise, and what drives my passion for computer science.</p>
+            <div class="section-header-block">
+                <span class="section-tag">PROFILE</span>
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">Dedicated to the craft of software engineering, algorithms, and clean interfaces.</p>
+            </div>
             
             <div class="about-grid">
-                <div class="about-info">
-                    <div class="about-image-wrapper">
-                        <img src="images/avatar.png" alt="Shoaib Mahin" class="about-avatar">
-                    </div>
+                <div class="about-image-container">
+                    <img src="images/avatar.png" alt="Shoaib Mahin" class="about-main-image">
+                </div>
+                
+                <div class="about-info-text">
                     <p>
                         I am currently pursuing a Bachelor's degree in <strong>Computer Science & Engineering (CSE)</strong>. 
                         From my early semesters, I fell in love with algorithm design, software architecture, and the endless possibilities of web development.
@@ -78,59 +118,83 @@
                         I enjoy transforming abstract logic into robust, functional software applications.
                     </p>
                     
-                    <div class="education-card">
-                        <span class="year">2023 - Present</span>
-                        <h3>B.Sc. in Computer Science & Engineering</h3>
-                        <p class="inst">Department of CSE</p>
-                        <p>Focusing on software development, data structures, analysis of algorithms, and web engineering. Active participant in coding contests and programming clubs.</p>
+                    <div class="education-card" style="background-color: var(--color-bg-card); border: 1px solid var(--color-border); padding: 1.75rem; border-radius: var(--radius-card); margin-top: 2rem;">
+                        <span class="year" style="color: var(--color-accent); font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.5rem;">2023 - Present</span>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.25rem;">B.Sc. in Computer Science & Engineering</h3>
+                        <p class="inst" style="font-weight: 600; color: var(--color-text-primary); margin-bottom: 0.5rem;">Department of CSE</p>
+                        <p style="font-size: 0.95rem; color: var(--color-text-secondary);">Focusing on software development, data structures, analysis of algorithms, and web engineering. Active participant in coding contests and programming clubs.</p>
                     </div>
                 </div>
-                
-                <div class="skills-wrapper">
-                    <h3>Technical Skills</h3>
-                    <div class="skills-grid">
-                        <div class="skill-category">
-                            <h4>Languages</h4>
-                            <div class="skill-list">
-                                <span class="skill-tag">C/C++</span>
-                                <span class="skill-tag">Java</span>
-                                <span class="skill-tag">Python</span>
-                                <span class="skill-tag">PHP</span>
-                                <span class="skill-tag">JavaScript</span>
-                            </div>
-                        </div>
-                        
-                        <div class="skill-category">
-                            <h4>Web Technologies</h4>
-                            <div class="skill-list">
-                                <span class="skill-tag">HTML5</span>
-                                <span class="skill-tag">CSS3</span>
-                                <span class="skill-tag">Bootstrap</span>
-                                <span class="skill-tag">React.js</span>
-                                <span class="skill-tag">MySQL</span>
-                            </div>
-                        </div>
+            </div>
 
-                        <div class="skill-category">
-                            <h4>Tools & Platforms</h4>
-                            <div class="skill-list">
-                                <span class="skill-tag">Git & GitHub</span>
-                                <span class="skill-tag">VS Code</span>
-                                <span class="skill-tag">XAMPP</span>
-                                <span class="skill-tag">Linux</span>
-                                <span class="skill-tag">Figma</span>
-                            </div>
+            <!-- Bento Grid Stack -->
+            <div class="skills-bento-grid" id="skillsBentoGrid">
+                <!-- Category 1 -->
+                <div class="skills-card card-uiux">
+                    <div class="card-top">
+                        <div class="icon-box">
+                            <i data-lucide="terminal-square"></i>
                         </div>
+                        <span class="card-number">01</span>
+                    </div>
+                    <div class="card-bottom">
+                        <h3>Languages</h3>
+                        <p>Writing robust code in C/C++, Java, Python, PHP, and JavaScript.</p>
+                    </div>
+                </div>
 
-                        <div class="skill-category">
-                            <h4>Soft Skills</h4>
-                            <div class="skill-list">
-                                <span class="skill-tag">Problem Solving</span>
-                                <span class="skill-tag">Teamwork</span>
-                                <span class="skill-tag">Quick Learner</span>
-                                <span class="skill-tag">Communication</span>
-                            </div>
+                <!-- Category 2 -->
+                <div class="skills-card card-programming">
+                    <div class="card-top-column">
+                        <div class="icon-box">
+                            <i data-lucide="code-2"></i>
                         </div>
+                        <div class="card-titles">
+                            <h3>Web Technologies</h3>
+                            <p>Developing responsive dynamic web platforms with HTML5, CSS3, Bootstrap, React.js, and MySQL.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 3 -->
+                <div class="skills-card card-frontend">
+                    <div class="card-top">
+                        <div class="icon-box">
+                            <i data-lucide="git-branch"></i>
+                        </div>
+                        <span class="card-number">02</span>
+                    </div>
+                    <div class="card-bottom">
+                        <h3>Tools</h3>
+                        <p>Configuring workflows using Git, GitHub, VS Code, XAMPP, and Linux.</p>
+                    </div>
+                </div>
+
+                <!-- Category 4 -->
+                <div class="skills-card card-visual">
+                    <div class="card-top">
+                        <div class="icon-box">
+                            <i data-lucide="palette"></i>
+                        </div>
+                        <span class="card-number">03</span>
+                    </div>
+                    <div class="card-bottom">
+                        <h3>Design Tools</h3>
+                        <p>Drafting layouts and assets in Figma.</p>
+                    </div>
+                </div>
+
+                <!-- Category 5 -->
+                <div class="skills-card card-version">
+                    <div class="card-top">
+                        <div class="icon-box">
+                            <i data-lucide="smile"></i>
+                        </div>
+                        <span class="card-number">04</span>
+                    </div>
+                    <div class="card-bottom">
+                        <h3>Soft Skills</h3>
+                        <p>Problem Solving, Teamwork, and Quick Learning.</p>
                     </div>
                 </div>
             </div>
@@ -138,185 +202,89 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects">
+    <section class="projects" id="projects">
         <div class="container">
-            <h2 class="section-title">My Projects</h2>
-            <p class="section-subtitle">Here is a selection of projects I've built during my academic coursework and personal coding sessions.</p>
+            <div class="section-header-block">
+                <span class="section-tag">WORKS</span>
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">Bridging abstract computer science algorithms with modular, components-driven web aesthetics.</p>
+            </div>
             
-            <div class="projects-grid">
-                <!-- Project 1 -->
-                <article class="project-card">
-                    <div class="project-content">
-                        <div class="project-meta">
-                            <span class="project-type">Web Application</span>
-                        </div>
-                        <h3>Student Database Portal</h3>
-                        <p>A web portal developed for academic institutes to manage student enrollments, academic transcripts, and attendance securely.</p>
-                        <div class="project-tags">
-                            <span>PHP</span>
-                            <span>MySQL</span>
-                            <span>HTML</span>
-                            <span>CSS</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                                </svg>
-                                GitHub
-                            </a>
+            <div class="projects-feature-list" id="projectsContainer">
+                <!-- Loaded dynamically via JS from Supabase. Fallback template below -->
+                <div class="feature-item">
+                    <div class="feature-content-wrapper">
+                        <span class="feature-title">Student Database Portal</span>
+                        <p class="feature-description">A web portal developed for academic institutes to manage student enrollments, transcripts, and attendance securely.</p>
+                        <div class="feature-tags">
+                            <span class="feature-tag">PHP</span>
+                            <span class="feature-tag">MySQL</span>
+                            <span class="feature-tag">HTML</span>
                         </div>
                     </div>
-                </article>
-
-                <!-- Project 2 -->
-                <article class="project-card">
-                    <div class="project-content">
-                        <div class="project-meta">
-                            <span class="project-type">Web Design</span>
-                        </div>
-                        <h3>Minimalist Portfolio</h3>
-                        <p>My personal digital portfolio showcasing my profile, academic projects, technical skills, and a way to reach out to me.</p>
-                        <div class="project-tags">
-                            <span>HTML</span>
-                            <span>CSS</span>
-                            <span>Vanilla JS</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                                </svg>
-                                GitHub
-                            </a>
-                        </div>
+                    <div class="feature-media">
+                        <div class="feature-media-item" style="background: radial-gradient(circle, #3b82f6 0%, #1d4ed8 100%); width: 100%; height: 100%;"></div>
                     </div>
-                </article>
-
-                <!-- Project 3 -->
-                <article class="project-card">
-                    <div class="project-content">
-                        <div class="project-meta">
-                            <span class="project-type">Frontend JS</span>
-                        </div>
-                        <h3>Algorithm Visualizer</h3>
-                        <p>An interactive, graphical web app that visualizes sorting (Bubble, Quick, Merge) and pathfinding algorithms in real-time.</p>
-                        <div class="project-tags">
-                            <span>JavaScript</span>
-                            <span>HTML5</span>
-                            <span>CSS Grid</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-link">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                                </svg>
-                                GitHub
-                            </a>
-                        </div>
-                    </div>
-                </article>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact">
+    <!-- Connect / Contact Section -->
+    <section class="connect-section" id="contact">
         <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <p class="section-subtitle">Have a project idea, academic inquiry, or just want to say hi? Feel free to drop a message!</p>
-            
-            <div class="contact-grid">
-                <div class="contact-info-panel">
-                    <h3>Let's Connect</h3>
-                    <p>I am always open to discussing new projects, internship opportunities, or academic collaborations.</p>
-                    
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                    <polyline points="22,6 12,13 2,6"></polyline>
-                                </svg>
-                            </div>
-                            <div class="contact-text">
-                                <h4>Email</h4>
-                                <p>shoaib.mahin@example.com</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                            </div>
-                            <div class="contact-text">
-                                <h4>Location</h4>
-                                <p>Dhaka, Bangladesh</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="connect-card">
+                <h2 class="connect-title">Let's work together</h2>
+                <p class="connect-subtitle">Have a project idea, academic inquiry, or just want to say hi? Feel free to drop a message!</p>
                 
-                <div class="contact-form-container">
-                    <div id="formMessage" class="form-message"></div>
+                <div class="connect-actions">
+                    <a href="mailto:shoaib.mahin@example.com" class="connect-btn primary" id="emailMailtoLink">
+                        <i data-lucide="mail"></i> <span id="emailDisplay">shoaib.mahin@example.com</span>
+                    </a>
+                    <button class="connect-btn secondary" id="copyEmailBtn" aria-label="Copy email address">
+                        <i data-lucide="copy"></i> Copy Email
+                    </button>
+                </div>
+
+                <!-- Sleek Minimalist Dynamic Form inside the Connect Card -->
+                <div class="contact-form-container" style="max-width: 520px; margin: 3.5rem auto 0; text-align: left;">
+                    <div id="formMessage" class="form-message" style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 8px; display: none;"></div>
                     <form id="contactForm">
-                        <!-- Web3Forms Config Key (Replace YOUR_ACCESS_KEY_HERE with your Web3Forms access key) -->
+                        <!-- Web3Forms Config Key -->
                         <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
                         <input type="hidden" name="subject" value="New Submission from Shoaib Mahin's Portfolio">
                         <input type="checkbox" name="botcheck" id="" style="display: none;">
 
-                        <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" name="name" class="form-control" required placeholder="Enter your name">
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label for="name" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-text-primary);">Your Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required placeholder="Enter your name" style="background-color: var(--color-bg); border-color: var(--color-border); color: var(--color-text-primary);">
                         </div>
-                        <div class="form-group">
-                            <label for="email">Your Email</label>
-                            <input type="email" id="email" name="email" class="form-control" required placeholder="Enter your email">
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label for="email" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-text-primary);">Your Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required placeholder="Enter your email" style="background-color: var(--color-bg); border-color: var(--color-border); color: var(--color-text-primary);">
                         </div>
-                        <div class="form-group">
-                            <label for="subject_text">Subject</label>
-                            <input type="text" id="subject_text" name="subject_text" class="form-control" required placeholder="What is this about?">
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label for="subject_text" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-text-primary);">Subject</label>
+                            <input type="text" id="subject_text" name="subject_text" class="form-control" required placeholder="What is this about?" style="background-color: var(--color-bg); border-color: var(--color-border); color: var(--color-text-primary);">
                         </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" class="form-control" required placeholder="Type your message here..."></textarea>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="message" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-text-primary);">Message</label>
+                            <textarea id="message" name="message" class="form-control" required placeholder="Type your message here..." style="background-color: var(--color-bg); border-color: var(--color-border); color: var(--color-text-primary); min-height: 100px;"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Send Message</button>
                     </form>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Shoaib Mahin. All rights reserved.</p>
+                    <div class="footer-external-links">
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="footer-external" id="githubFooterLink">GitHub</a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-external">LinkedIn</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-content">
-            <p>&copy; 2026 Shoaib Mahin. All rights reserved.</p>
-            <div class="social-links">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                    </svg>
-                </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
-                </a>
-                <a href="mailto:shoaib.mahin@example.com" aria-label="Email">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>

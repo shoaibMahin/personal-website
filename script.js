@@ -1,9 +1,16 @@
 // script.js
 // Client-side interactions & Supabase integrations for Shoaib Mahin's portfolio
 
+// Load saved theme on initial startup
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+} else {
+    document.documentElement.setAttribute('data-theme', 'dark'); // Default dark mode
+}
+
 // =========================================================================
 // SUPABASE CONFIGURATION
-// Replace YOUR_SUPABASE_URL and YOUR_SUPABASE_ANON_KEY with your credentials
 // =========================================================================
 const supabaseUrl = 'https://fdtvqmhnaxdhjzmflkwi.supabase.co';
 const supabaseKey = 'sb_publishable_p8pRdWn2jRHCPo-Bh4gJdQ_KW6VPWm8';
@@ -28,26 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // PORTFOLIO VIEWER PAGE LOGIC (index.html)
 // =========================================================================
 function initPortfolioViewer() {
-    // 1. Mobile Navigation Toggle
-    const navToggle = document.getElementById('navToggle');
-    const mainNav = document.getElementById('mainNav');
-
-    if (navToggle && mainNav) {
-        navToggle.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-        });
-
-        const navLinks = mainNav.querySelectorAll('a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mainNav.classList.remove('active');
-            });
-        });
-    }
-
-    // 2. Scroll Spy - Active Navigation Link
+    // 1. Mobile Navigation Active Link & Scroll Spy
     const sections = document.querySelectorAll('section');
-    const navItems = document.querySelectorAll('nav.main-nav ul li a');
+    const navItems = document.querySelectorAll('.floating-nav .nav-pill .nav-link');
 
     function highlightNavigation() {
         let currentSectionId = '';
@@ -55,7 +45,7 @@ function initPortfolioViewer() {
 
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
-            if (scrollPosition >= (sectionTop - 150)) {
+            if (scrollPosition >= (sectionTop - 250)) {
                 currentSectionId = section.getAttribute('id');
             }
         });
@@ -71,7 +61,52 @@ function initPortfolioViewer() {
     window.addEventListener('scroll', highlightNavigation);
     highlightNavigation();
 
-    // 3. Static Contact Form Submission via Web3Forms
+    // 2. Light / Dark Theme Toggle
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const htmlEl = document.documentElement;
+            const currentTheme = htmlEl.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlEl.classList.add('theme-transitioning');
+            htmlEl.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            setTimeout(() => {
+                htmlEl.classList.remove('theme-transitioning');
+            }, 450);
+        });
+    }
+
+    // 3. Copy Email Action
+    const copyEmailBtn = document.getElementById('copyEmailBtn');
+    const emailDisplay = document.getElementById('emailDisplay');
+    if (copyEmailBtn && emailDisplay) {
+        copyEmailBtn.addEventListener('click', () => {
+            const email = emailDisplay.textContent;
+            navigator.clipboard.writeText(email).then(() => {
+                const originalHTML = copyEmailBtn.innerHTML;
+                copyEmailBtn.innerHTML = '<i data-lucide="check"></i> Copied!';
+                lucide.createIcons();
+                copyEmailBtn.style.backgroundColor = '#22c55e';
+                copyEmailBtn.style.color = '#ffffff';
+                copyEmailBtn.style.borderColor = '#22c55e';
+                
+                setTimeout(() => {
+                    copyEmailBtn.innerHTML = originalHTML;
+                    lucide.createIcons();
+                    copyEmailBtn.style.backgroundColor = '';
+                    copyEmailBtn.style.color = '';
+                    copyEmailBtn.style.borderColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        });
+    }
+
+    // 4. Static Contact Form Submission via Web3Forms
     const contactForm = document.getElementById('contactForm');
     const formMessage = document.getElementById('formMessage');
 
@@ -122,7 +157,10 @@ function initPortfolioViewer() {
         });
     }
 
-    // 4. Fetch and render data from Supabase (if configured)
+    // Initialize Lucide Icons for static elements
+    lucide.createIcons();
+
+    // 5. Fetch and render data from Supabase (if configured)
     if (supabaseClient) {
         loadViewerData();
     } else {
@@ -144,12 +182,15 @@ async function loadViewerData() {
             document.querySelector('.logo').innerHTML = `${profile.name.split(' ')[0]}<span>${profile.name.split(' ').slice(1).join(' ')}</span>`;
             
             // Hero section
-            document.querySelector('#home .hero-tag').textContent = profile.hero_tag || 'Welcome to my space';
+            const heroBadge = document.querySelector('#home .hero-badge');
+            if (heroBadge) {
+                heroBadge.innerHTML = `<span class="status-dot"></span> ${profile.hero_tag || 'Available for new projects'}`;
+            }
             document.querySelector('#home .hero-title').innerHTML = `Hi, I'm ${profile.name}.<br>${profile.title}.`;
             document.querySelector('#home .hero-desc').textContent = profile.hero_desc;
             
             // About section
-            const aboutParagraphs = document.querySelectorAll('#about .about-info p');
+            const aboutParagraphs = document.querySelectorAll('#about .about-info-text p');
             if (aboutParagraphs.length >= 2) {
                 aboutParagraphs[0].innerHTML = profile.about_text_1;
                 aboutParagraphs[1].innerHTML = profile.about_text_2;
@@ -164,11 +205,12 @@ async function loadViewerData() {
                 eduCard.querySelector('p:last-child').textContent = profile.education_desc;
             }
 
-            // Contact info
-            const contactItems = document.querySelectorAll('#contact .contact-item');
-            if (contactItems.length >= 2) {
-                contactItems[0].querySelector('p').textContent = profile.email;
-                contactItems[1].querySelector('p').textContent = profile.location;
+            // Contact / Email Display
+            const emailDisplay = document.getElementById('emailDisplay');
+            const emailMailtoLink = document.getElementById('emailMailtoLink');
+            if (emailDisplay && emailMailtoLink) {
+                emailDisplay.textContent = profile.email;
+                emailMailtoLink.href = `mailto:${profile.email}`;
             }
         }
 
@@ -197,69 +239,125 @@ async function loadViewerData() {
 }
 
 function renderViewerSkills(skills) {
-    const skillsWrapper = document.querySelector('#about .skills-grid');
-    if (!skillsWrapper) return;
-    skillsWrapper.innerHTML = '';
-
-    // Group skills by category
-    const categories = [...new Set(skills.map(s => s.category))];
+    const bentoCardLanguages = document.querySelector('.card-uiux .card-bottom');
+    const bentoCardWeb = document.querySelector('.card-programming .card-titles');
+    const bentoCardTools = document.querySelector('.card-frontend .card-bottom');
+    const bentoCardDesign = document.querySelector('.card-visual .card-bottom');
+    const bentoCardSoft = document.querySelector('.card-version .card-bottom');
     
-    categories.forEach(category => {
-        const categorySkills = skills.filter(s => s.category === category);
-        const card = document.createElement('div');
-        card.className = 'skill-category';
-        
-        let tagsHTML = '';
-        categorySkills.forEach(s => {
-            tagsHTML += `<span class="skill-tag">${s.name}</span>`;
+    const skillsMarquee = document.getElementById('skillsMarquee');
+    
+    if (skillsMarquee) {
+        skillsMarquee.innerHTML = '';
+        // Duplicate skills three times for infinite marquee scrolling effect
+        const doubleSkills = [...skills, ...skills, ...skills];
+        doubleSkills.forEach(skill => {
+            let icon = 'code';
+            if (skill.category === 'Languages') icon = 'terminal-square';
+            else if (skill.category === 'Web Technologies') icon = 'code-2';
+            else if (skill.category === 'Tools & Platforms') icon = 'git-branch';
+            else if (skill.category === 'Soft Skills') icon = 'smile';
+            
+            const item = document.createElement('div');
+            item.className = 'ticker-item';
+            item.innerHTML = `<i data-lucide="${icon}"></i> ${skill.name}`;
+            skillsMarquee.appendChild(item);
         });
+    }
 
-        card.innerHTML = `
-            <h4>${category}</h4>
-            <div class="skill-list">
-                ${tagsHTML}
-            </div>
+    const getTagsHTML = (catName, isFigmaOnly = null) => {
+        let filtered = skills.filter(s => s.category === catName);
+        if (isFigmaOnly === true) {
+            filtered = filtered.filter(s => s.name.toLowerCase() === 'figma');
+        } else if (isFigmaOnly === false) {
+            filtered = filtered.filter(s => s.name.toLowerCase() !== 'figma');
+        }
+        let tags = '';
+        filtered.forEach(s => {
+            tags += `<span class="tag-badge">${s.name}</span>`;
+        });
+        return `<div class="card-tags">${tags}</div>`;
+    };
+
+    if (bentoCardLanguages) {
+        bentoCardLanguages.innerHTML = `
+            <h3>Languages</h3>
+            ${getTagsHTML('Languages')}
         `;
-        skillsWrapper.appendChild(card);
-    });
+    }
+    if (bentoCardWeb) {
+        bentoCardWeb.innerHTML = `
+            <h3>Web Technologies</h3>
+            ${getTagsHTML('Web Technologies')}
+        `;
+    }
+    if (bentoCardTools) {
+        bentoCardTools.innerHTML = `
+            <h3>Tools & Platforms</h3>
+            ${getTagsHTML('Tools & Platforms', false)}
+        `;
+    }
+    if (bentoCardDesign) {
+        bentoCardDesign.innerHTML = `
+            <h3>Design Tools</h3>
+            ${getTagsHTML('Tools & Platforms', true)}
+        `;
+    }
+    if (bentoCardSoft) {
+        bentoCardSoft.innerHTML = `
+            <h3>Soft Skills</h3>
+            ${getTagsHTML('Soft Skills')}
+        `;
+    }
+    
+    lucide.createIcons();
 }
 
 function renderViewerProjects(projects) {
-    const projectsGrid = document.querySelector('#projects .projects-grid');
-    if (!projectsGrid) return;
-    projectsGrid.innerHTML = '';
+    const projectsContainer = document.getElementById('projectsContainer');
+    if (!projectsContainer) return;
+    projectsContainer.innerHTML = '';
 
-    projects.forEach(project => {
-        const card = document.createElement('article');
-        card.className = 'project-card';
+    const gradients = [
+        'radial-gradient(circle, #4f46e5 0%, #312e81 100%)',
+        'radial-gradient(circle, #3b82f6 0%, #1d4ed8 100%)',
+        'radial-gradient(circle, #10b981 0%, #064e3b 100%)',
+        'radial-gradient(circle, #ec4899 0%, #831843 100%)',
+        'radial-gradient(circle, #8b5cf6 0%, #4c1d95 100%)',
+        'radial-gradient(circle, #f59e0b 0%, #78350f 100%)'
+    ];
+
+    projects.forEach((project, idx) => {
+        const item = document.createElement('a');
+        item.href = project.github_url;
+        item.target = '_blank';
+        item.className = 'feature-item';
 
         let tagsHTML = '';
         project.tags.forEach(tag => {
-            tagsHTML += `<span>${tag.trim()}</span>`;
+            tagsHTML += `<span class="feature-tag">${tag.trim()}</span>`;
         });
 
-        card.innerHTML = `
-            <div class="project-content">
-                <div class="project-meta">
-                    <span class="project-type">${project.type}</span>
-                </div>
-                <h3>${project.title}</h3>
-                <p>${project.description}</p>
-                <div class="project-tags">
+        const gradient = gradients[idx % gradients.length];
+
+        item.innerHTML = `
+            <div class="feature-content-wrapper">
+                <span class="feature-title">${project.title}</span>
+                <p class="feature-description">${project.description}</p>
+                <div class="feature-tags">
                     ${tagsHTML}
                 </div>
-                <div class="project-links">
-                    <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="project-link">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                        </svg>
-                        GitHub
-                    </a>
+            </div>
+            <div class="feature-media">
+                <div class="feature-media-item" style="background: ${gradient}; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i data-lucide="code-2" style="width: 48px; height: 48px; stroke-width: 1.5;"></i>
                 </div>
             </div>
         `;
-        projectsGrid.appendChild(card);
+        projectsContainer.appendChild(item);
     });
+    
+    lucide.createIcons();
 }
 
 // =========================================================================
