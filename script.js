@@ -15,7 +15,9 @@ if (typeof supabase !== 'undefined' && supabaseUrl !== 'YOUR_SUPABASE_URL') {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize viewer or admin views based on DOM elements
-    if (document.getElementById('loginForm') || document.getElementById('dashboardSection')) {
+    if (document.getElementById('newPasswordForm')) {
+        initResetPasswordPage();
+    } else if (document.getElementById('loginForm') || document.getElementById('dashboardSection')) {
         initAdminDashboard();
     } else {
         initPortfolioViewer();
@@ -327,6 +329,72 @@ function initAdminDashboard() {
         });
     }
 
+    // Toggle Forgot Password Form
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const backToLoginLink = document.getElementById('backToLoginLink');
+    const resetEmailSection = document.getElementById('resetEmailSection');
+    const resetEmailForm = document.getElementById('resetEmailForm');
+
+    if (forgotPasswordLink && backToLoginLink && authSection && resetEmailSection) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authSection.style.display = 'none';
+            resetEmailSection.style.display = 'block';
+        });
+
+        backToLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetEmailSection.style.display = 'none';
+            authSection.style.display = 'block';
+        });
+    }
+
+    // Handle Reset Password Email Submit
+    if (resetEmailForm) {
+        resetEmailForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reset_email').value;
+            const msg = document.getElementById('resetEmailMessage');
+            const submitBtn = document.getElementById('resetEmailSubmitBtn');
+            const originalText = submitBtn.textContent;
+
+            msg.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + window.location.pathname.replace('admin.html', 'reset-password.html')
+            });
+
+            if (error) {
+                msg.className = 'form-message error';
+                msg.textContent = error.message;
+                msg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            } else {
+                msg.className = 'form-message success';
+                msg.textContent = 'A password reset link has been sent to your email. Please check your inbox!';
+                msg.style.display = 'block';
+
+                submitBtn.style.backgroundColor = '#22c55e'; // Green button state
+                submitBtn.style.borderColor = '#22c55e';
+                submitBtn.style.color = '#ffffff';
+                submitBtn.textContent = 'Reset Link Sent!';
+
+                resetEmailForm.reset();
+
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.style.backgroundColor = '';
+                    submitBtn.style.borderColor = '';
+                    submitBtn.style.color = '';
+                    submitBtn.textContent = originalText;
+                }, 4000);
+            }
+        });
+    }
+
     // Setup Tabs switching
     const tabs = document.querySelectorAll('.tab-btn');
     const panels = document.querySelectorAll('.panel');
@@ -624,4 +692,66 @@ function resetProjectForm() {
     document.getElementById('proj_tags').value = '';
     document.getElementById('proj_github').value = '';
     document.getElementById('proj_desc').value = '';
+}
+
+// =========================================================================
+// RESET PASSWORD PAGE LOGIC (reset-password.html)
+// =========================================================================
+function initResetPasswordPage() {
+    const newPasswordForm = document.getElementById('newPasswordForm');
+    const msg = document.getElementById('resetMessage');
+    const submitBtn = document.getElementById('newPasswordSubmitBtn');
+
+    if (!supabaseClient) {
+        alert("Warning: Supabase credentials are not configured!");
+        return;
+    }
+
+    if (newPasswordForm) {
+        newPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const originalText = submitBtn.textContent;
+
+            msg.style.display = 'none';
+
+            if (password !== confirmPassword) {
+                msg.className = 'form-message error';
+                msg.textContent = 'Passwords do not match!';
+                msg.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Updating Password...';
+
+            const { data, error } = await supabaseClient.auth.updateUser({
+                password: password
+            });
+
+            if (error) {
+                msg.className = 'form-message error';
+                msg.textContent = error.message;
+                msg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            } else {
+                msg.className = 'form-message success';
+                msg.textContent = 'Password reset successfully! Redirecting to login...';
+                msg.style.display = 'block';
+
+                submitBtn.style.backgroundColor = '#22c55e'; // Green button state
+                submitBtn.style.borderColor = '#22c55e';
+                submitBtn.style.color = '#ffffff';
+                submitBtn.textContent = 'Updated Successfully!';
+
+                newPasswordForm.reset();
+
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 3000);
+            }
+        });
+    }
 }
