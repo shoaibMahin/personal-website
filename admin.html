@@ -261,6 +261,15 @@
                 <h3 class="panel-title">Edit Profile Information</h3>
                 <div id="profileMessage" class="form-message"></div>
                 <form id="profileForm">
+                    <div class="form-row" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem;">
+                        <div>
+                            <img id="prof_avatar_preview" src="images/avatar.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; display: block;">
+                        </div>
+                        <div class="form-group" style="margin: 0; flex-grow: 1;">
+                            <label for="prof_avatar_file">Change Profile Picture</label>
+                            <input type="file" id="prof_avatar_file" accept="image/*" class="form-control" style="padding: 6px 12px;">
+                        </div>
+                    </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="prof_name">Full Name</label>
@@ -390,6 +399,15 @@
                         <div class="form-group">
                             <label for="proj_github">GitHub URL</label>
                             <input type="url" id="proj_github" class="form-control" required placeholder="https://github.com/...">
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 2rem;">
+                        <div id="proj_img_preview_container" style="display: none;">
+                            <img id="proj_img_preview" src="" style="width: 120px; height: 75px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0;">
+                        </div>
+                        <div class="form-group" style="margin: 0; flex-grow: 1;">
+                            <label for="proj_image_file">Upload Project Art / Screenshot (Optional)</label>
+                            <input type="file" id="proj_image_file" accept="image/*" class="form-control" style="padding: 6px 12px;">
                         </div>
                     </div>
                     <div class="form-row">

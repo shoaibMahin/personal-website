@@ -195,6 +195,12 @@ async function loadViewerData() {
                 aboutParagraphs[0].innerHTML = profile.about_text_1;
                 aboutParagraphs[1].innerHTML = profile.about_text_2;
             }
+
+            // About Image
+            const aboutImage = document.querySelector('#about .about-main-image');
+            if (aboutImage && profile.avatar_url) {
+                aboutImage.src = profile.avatar_url;
+            }
             
             // Education Card
             const eduCard = document.querySelector('#about .education-card');
@@ -349,9 +355,12 @@ function renderViewerProjects(projects) {
                 </div>
             </div>
             <div class="feature-media">
-                <div class="feature-media-item" style="background: ${gradient}; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
-                    <i data-lucide="code-2" style="width: 48px; height: 48px; stroke-width: 1.5;"></i>
-                </div>
+                ${project.image_url 
+                    ? `<img src="${project.image_url}" class="feature-media-item" alt="${project.title}">`
+                    : `<div class="feature-media-item" style="background: ${gradient}; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                           <i data-lucide="code-2" style="width: 48px; height: 48px; stroke-width: 1.5;"></i>
+                       </div>`
+                }
             </div>
         `;
         projectsContainer.appendChild(item);
@@ -529,6 +538,12 @@ async function loadAdminData() {
             document.getElementById('prof_edu_inst').value = profile.education_inst;
             document.getElementById('prof_location').value = profile.location;
             document.getElementById('prof_edu_desc').value = profile.education_desc;
+
+            // Set profile avatar preview if exists
+            const profAvatarPreview = document.getElementById('prof_avatar_preview');
+            if (profAvatarPreview && profile.avatar_url) {
+                profAvatarPreview.src = profile.avatar_url;
+            }
         }
 
         // 2. Load Skills List
@@ -612,6 +627,18 @@ window.editProject = function(project) {
     document.getElementById('proj_github').value = project.github_url;
     document.getElementById('proj_desc').value = project.description;
 
+    // Show current image preview if exists
+    const projPreviewEl = document.getElementById('proj_img_preview');
+    const projPreviewContainer = document.getElementById('proj_img_preview_container');
+    if (projPreviewEl && projPreviewContainer) {
+        if (project.image_url) {
+            projPreviewEl.src = project.image_url;
+            projPreviewContainer.style.display = 'block';
+        } else {
+            projPreviewContainer.style.display = 'none';
+        }
+    }
+
     document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
 };
 
@@ -634,6 +661,31 @@ function setupAdminForms() {
 
     // 1. Submit Profile Form
     if (profileForm) {
+        // Image preview listeners
+        const profAvatarFile = document.getElementById('prof_avatar_file');
+        const profAvatarPreview = document.getElementById('prof_avatar_preview');
+        if (profAvatarFile && profAvatarPreview) {
+            profAvatarFile.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    profAvatarPreview.src = URL.createObjectURL(file);
+                }
+            });
+        }
+
+        const projImageFile = document.getElementById('proj_image_file');
+        const projImgPreview = document.getElementById('proj_img_preview');
+        const projImgPreviewContainer = document.getElementById('proj_img_preview_container');
+        if (projImageFile && projImgPreview && projImgPreviewContainer) {
+            projImageFile.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    projImgPreview.src = URL.createObjectURL(file);
+                    projImgPreviewContainer.style.display = 'block';
+                }
+            });
+        }
+
         profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const msg = document.getElementById('profileMessage');
@@ -660,18 +712,26 @@ function setupAdminForms() {
                 education_desc: document.getElementById('prof_edu_desc').value
             };
 
-            const { error } = await supabaseClient
-                .from('profile')
-                .update(profileData)
-                .eq('id', 1);
+            try {
+                // If a profile image file was selected, upload it
+                const avatarFile = document.getElementById('prof_avatar_file').files[0];
+                if (avatarFile) {
+                    const timestamp = Date.now();
+                    const extension = avatarFile.name.split('.').pop();
+                    const filePath = `profile/avatar-${timestamp}.${extension}`;
+                    const avatarUrl = await uploadImageToStorage(avatarFile, filePath);
+                    if (avatarUrl) {
+                        profileData.avatar_url = avatarUrl;
+                    }
+                }
 
-            if (error) {
-                msg.className = 'form-message error';
-                msg.textContent = error.message;
-                msg.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
-            } else {
+                const { error } = await supabaseClient
+                    .from('profile')
+                    .update(profileData)
+                    .eq('id', 1);
+
+                if (error) throw error;
+
                 msg.className = 'form-message success';
                 msg.textContent = 'Profile successfully updated!';
                 msg.style.display = 'block';
@@ -690,6 +750,12 @@ function setupAdminForms() {
                     submitBtn.style.color = '';
                     submitBtn.textContent = originalText;
                 }, 3000);
+            } catch (err) {
+                msg.className = 'form-message error';
+                msg.textContent = err.message || err;
+                msg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
         });
     }
@@ -741,34 +807,48 @@ function setupAdminForms() {
                 description: document.getElementById('proj_desc').value
             };
 
-            let error = null;
+            try {
+                // If a project image file was selected, upload it
+                const projectFile = document.getElementById('proj_image_file').files[0];
+                if (projectFile) {
+                    const timestamp = Date.now();
+                    const extension = projectFile.name.split('.').pop();
+                    const filePath = `projects/project-${timestamp}.${extension}`;
+                    const imageUrl = await uploadImageToStorage(projectFile, filePath);
+                    if (imageUrl) {
+                        projectData.image_url = imageUrl;
+                    }
+                }
 
-            if (projId) {
-                // Edit mode
-                const { error: editErr } = await supabaseClient
-                    .from('projects')
-                    .update(projectData)
-                    .eq('id', projId);
-                error = editErr;
-            } else {
-                // Add mode
-                const { error: addErr } = await supabaseClient
-                    .from('projects')
-                    .insert([projectData]);
-                error = addErr;
-            }
+                let error = null;
 
-            if (error) {
-                msg.className = 'form-message error';
-                msg.textContent = error.message;
-                msg.style.display = 'block';
-            } else {
+                if (projId) {
+                    // Edit mode
+                    const { error: editErr } = await supabaseClient
+                        .from('projects')
+                        .update(projectData)
+                        .eq('id', projId);
+                    error = editErr;
+                } else {
+                    // Add mode
+                    const { error: addErr } = await supabaseClient
+                        .from('projects')
+                        .insert([projectData]);
+                    error = addErr;
+                }
+
+                if (error) throw error;
+
                 resetProjectForm();
                 msg.className = 'form-message success';
                 msg.textContent = projId ? 'Project updated successfully!' : 'Project added successfully!';
                 msg.style.display = 'block';
                 loadAdminProjectsList();
                 setTimeout(() => msg.style.display = 'none', 3000);
+            } catch (err) {
+                msg.className = 'form-message error';
+                msg.textContent = err.message || err;
+                msg.style.display = 'block';
             }
         });
     }
@@ -790,6 +870,34 @@ function resetProjectForm() {
     document.getElementById('proj_tags').value = '';
     document.getElementById('proj_github').value = '';
     document.getElementById('proj_desc').value = '';
+
+    // Reset file uploads
+    const fileInput = document.getElementById('proj_image_file');
+    if (fileInput) fileInput.value = '';
+    const previewContainer = document.getElementById('proj_img_preview_container');
+    if (previewContainer) previewContainer.style.display = 'none';
+}
+
+// Helper function to upload images to Supabase Storage
+async function uploadImageToStorage(file, path) {
+    if (!supabaseClient) return null;
+    
+    const { data, error } = await supabaseClient.storage
+        .from('portfolio-assets')
+        .upload(path, file, {
+            upsert: true,
+            cacheControl: '3600'
+        });
+        
+    if (error) {
+        throw error;
+    }
+    
+    const { data: urlData } = supabaseClient.storage
+        .from('portfolio-assets')
+        .getPublicUrl(path);
+        
+    return urlData.publicUrl;
 }
 
 // =========================================================================
